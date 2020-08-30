@@ -37,6 +37,8 @@ const Buttons = styled.div`
 `
 
 const getHighScores = () => {
+  if (typeof window === "undefined") return
+
   const highScores = localStorage.getItem("highscores")
   return highScores ? JSON.parse(highScores) : []
 }
