@@ -85,3 +85,28 @@ export const getScore = removedCount => {
   if (removedCount === 3) return 300
   if (removedCount === 4) return 1200
 }
+
+export const getSpeed = (defaultSpeed, lvl) => {
+  // Until I figure out a nice algorithm for this =)
+  if (lvl === 1) return 900
+  if (lvl === 2) return 805
+  if (lvl === 3) return 715
+  if (lvl === 4) return 630
+  if (lvl === 5) return 630
+  if (lvl === 6) return 550
+  if (lvl === 7) return 475
+  if (lvl === 8) return 405
+  if (lvl === 9) return 345
+  if (lvl === 10) return 285
+  if (lvl === 11) return 230
+  if (lvl === 12) return 180
+  if (lvl === 13) return 135
+  if (lvl === 14) return 95
+  if (lvl === 15) return 60
+  if (lvl === 16) return 50
+  if (lvl === 17) return 40
+  if (lvl === 18) return 30
+  if (lvl === 19) return 20
+  if (lvl === 20) return 10
+  return 10
+}
