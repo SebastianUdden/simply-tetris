@@ -75,6 +75,7 @@ export default () => {
               id="restart"
               onClick={() => {
                 handleEndGame()
+                setScore(0)
                 setTimeout(() => setShowTab("tetris"), 100)
               }}
             >
