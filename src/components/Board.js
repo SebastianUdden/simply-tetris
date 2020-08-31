@@ -37,15 +37,15 @@ const InnerBoard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: ${CELL_SIZE + 2}px;
+  margin-top: ${p => p.cellSize + 2}px;
 `
 const Row = styled.div`
   display: flex;
 `
 const Cell = styled.div`
   background-color: ${p => p.color};
-  width: ${CELL_SIZE}px;
-  height: ${CELL_SIZE}px;
+  width: ${p => p.cellSize}px;
+  height: ${p => p.cellSize}px;
   margin: 1px;
   box-shadow: 1px 1px black;
 `
@@ -62,6 +62,8 @@ const Arrow = styled.button`
   border: none;
   background-color: #444;
   color: #fff;
+  touch-action: manipulation;
+  user-select: none;
   :hover {
     cursor: pointer;
     background-color: #777;
@@ -91,6 +93,11 @@ const Score = styled.span`
   border-bottom: 1px solid orange;
 `
 
+const getCellSize = () => {
+  if (typeof window === "undefined") return CELL_SIZE
+  return window.innerHeight / 50
+}
+
 export default ({ pause, score, onEndGame, onScoreChange }) => {
   const width = 12
   const height = 22
@@ -119,6 +126,7 @@ export default ({ pause, score, onEndGame, onScoreChange }) => {
   })
   const [board, setBoard] = useState(innerBoard)
   const [count, setCount] = useState(END_GAME_COUNT + 1)
+  const [cellSize, setCellSize] = useState(CELL_SIZE)
   const [tetrominoType, setTetrominoType] = useState(randomProperty(TETROMINOS))
   const [tetromino, setTetromino] = useState(tetrominoType.rot1)
   const [rotation, setRotation] = useState("rot1")
@@ -247,6 +255,7 @@ export default ({ pause, score, onEndGame, onScoreChange }) => {
   }, [pause, count])
 
   useEffect(() => {
+    setCellSize(getCellSize())
     // document.body.addEventListener("keydown", keyHandler)
     const timer = setTimeout(() => {
       setCount(0)
@@ -268,16 +277,16 @@ export default ({ pause, score, onEndGame, onScoreChange }) => {
           {outerBoard.map(row => (
             <Row>
               {row.map(cell => (
-                <Cell {...cell} />
+                <Cell {...cell} cellSize={cellSize} />
               ))}
             </Row>
           ))}
         </OuterBoard>
-        <InnerBoard>
+        <InnerBoard cellSize={cellSize}>
           {board.map(row => (
             <Row>
               {row.map(cell => (
-                <Cell {...cell} />
+                <Cell {...cell} cellSize={cellSize} />
               ))}
             </Row>
           ))}
