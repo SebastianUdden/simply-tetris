@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 
 const Wrapper = styled.div`
@@ -19,11 +19,24 @@ const Button = styled.button`
     background-color: #777;
   }
 `
+const SmallButton = styled.button`
+  font-size: small;
+  padding: 0 15px;
+  border: none;
+  background-color: #444;
+  color: white;
+  :hover {
+    cursor: pointer;
+    background-color: #777;
+  }
+`
 
 const Title = styled.h2`
   border-bottom: 1px solid white;
   text-align: left;
   padding: 5px;
+  display: flex;
+  justify-content: space-between;
 `
 
 const HighScores = styled.div`
@@ -41,14 +54,24 @@ const HighScore = styled.p`
   border-bottom: 1px solid #444;
 `
 
+const Left = styled.div`
+  display: flex;
+  margin: 0;
+`
+const Place = styled.div`
+  width: 30px;
+  margin-right: 10px;
+`
 const Name = styled.span``
 const Score = styled.span`
   color: orange;
 `
 
 export default ({ onClick, highScores = [] }) => {
+  const [showAll, setShowAll] = useState(false)
   const MAX = 10
   const maxLength = highScores.length < MAX ? highScores.length : MAX
+  const highScoresShown = showAll ? highScores : highScores.slice(0, maxLength)
   return (
     <Wrapper>
       <Button id="play" onClick={onClick}>
@@ -56,10 +79,18 @@ export default ({ onClick, highScores = [] }) => {
       </Button>
       {highScores.length !== 0 && (
         <HighScores>
-          <Title>High-score</Title>
-          {highScores.slice(0, maxLength).map(({ name, score }) => (
+          <Title>
+            <span>High-score</span>
+            <SmallButton onClick={() => setShowAll(!showAll)}>
+              {showAll ? "Show Top 10" : "Show All"}
+            </SmallButton>
+          </Title>
+          {highScoresShown.map(({ name, score }, index) => (
             <HighScore>
-              <Name>{name}</Name>
+              <Left>
+                <Place>{index + 1}.</Place>
+                <Name>{name}</Name>
+              </Left>
               <Score>{score}</Score>
             </HighScore>
           ))}
