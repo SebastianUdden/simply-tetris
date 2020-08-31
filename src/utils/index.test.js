@@ -97,13 +97,28 @@ test("speed at level 15 should increase by 35", () => {
   const result = getSpeed(DEFAULT_SPEED, 15)
   expect(result).toBe(SPEED)
 })
-test("speed at level 16 should increase by 30", () => {
-  const SPEED = 30
+test("speed at level 16 should increase by 10", () => {
+  const SPEED = 50
   const result = getSpeed(DEFAULT_SPEED, 16)
   expect(result).toBe(SPEED)
 })
-test("speed at level 17 should increase by 25", () => {
-  const SPEED = 5
+test("speed at level 17 should increase by 10", () => {
+  const SPEED = 40
   const result = getSpeed(DEFAULT_SPEED, 17)
+  expect(result).toBe(SPEED)
+})
+test("speed at level 18 should increase by 10", () => {
+  const SPEED = 30
+  const result = getSpeed(DEFAULT_SPEED, 18)
+  expect(result).toBe(SPEED)
+})
+test("speed at level 19 should increase by 10", () => {
+  const SPEED = 20
+  const result = getSpeed(DEFAULT_SPEED, 19)
+  expect(result).toBe(SPEED)
+})
+test("speed at level 20 should increase by 10", () => {
+  const SPEED = 10
+  const result = getSpeed(DEFAULT_SPEED, 20)
   expect(result).toBe(SPEED)
 })
