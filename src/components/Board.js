@@ -12,9 +12,11 @@ import {
   lockBoard,
   showFullRows,
   getScore,
+  getSpeed,
 } from "../utils"
 
 import { replaceFullRows, findLockedIndexes } from "../utils/replaceFullRows"
+import { useKeyboardEvent } from "../hooks/useKeyboardEvent"
 
 const CELL_SIZE = 25
 const DEFAULT_SPEED = 600
@@ -133,7 +135,23 @@ export default ({ pause, score, onEndGame, onScoreChange }) => {
   const [x_pos, setX_pos] = useState(4)
   const [clearedRows, setClearedRows] = useState(0)
   const [lvl, setLvl] = useState(1)
-  const SPEED = DEFAULT_SPEED / lvl
+  const [speed, setSpeed] = useState(getSpeed(DEFAULT_SPEED, lvl))
+
+  useKeyboardEvent("ArrowUp", () => {
+    goUp()
+  })
+  useKeyboardEvent("ArrowLeft", () => {
+    goLeft()
+  })
+  useKeyboardEvent("ArrowRight", () => {
+    goRight()
+  })
+  useKeyboardEvent("ArrowDown", () => {
+    goDown()
+  })
+  useKeyboardEvent(" ", () => {
+    handleRotation()
+  })
 
   const changeXpos = value => {
     const newPos = x_pos + value
@@ -181,10 +199,13 @@ export default ({ pause, score, onEndGame, onScoreChange }) => {
     setTetrominoType(randomProperty(TETROMINOS))
     setCount(END_GAME_COUNT + 1)
     setX_pos(4)
+    setSpeed(getSpeed(DEFAULT_SPEED, lvl))
   }
 
+  const goUp = () => setSpeed(0.1)
   const goLeft = () => changeXpos(-1)
   const goRight = () => changeXpos(1)
+  const goDown = () => setCount(count + 1)
 
   //   const keyHandler = e => {
   //     if (e.key === "ArrowUp") {
@@ -238,9 +259,9 @@ export default ({ pause, score, onEndGame, onScoreChange }) => {
         }
         const adjustedBoard = replaceFullRows(withFullRows, lockedIndexes)
         setBoard(adjustedBoard)
-      }, SPEED)
+      }, speed)
     }
-  }, [pause, x_pos, count])
+  }, [pause, x_pos, count, speed])
 
   useEffect(() => {
     if (count === END_GAME_COUNT || pause) return
@@ -250,16 +271,16 @@ export default ({ pause, score, onEndGame, onScoreChange }) => {
       } else {
         setCount(count + 1)
       }
-    }, SPEED)
+    }, speed)
     return () => clearTimeout(timer)
-  }, [pause, count])
+  }, [pause, count, speed])
 
   useEffect(() => {
     setCellSize(getCellSize())
     // document.body.addEventListener("keydown", keyHandler)
     const timer = setTimeout(() => {
       setCount(0)
-    }, SPEED)
+    }, speed)
     return () => {
       clearTimeout(timer)
       //   document.body.removeEventListener("keydown", keyHandler)
@@ -296,8 +317,9 @@ export default ({ pause, score, onEndGame, onScoreChange }) => {
             <Arrow onClick={goLeft}>{"Left"}</Arrow>
           </Column>
           <Column>
-            <Arrow onClick={() => handleRotation()}>{"Rotate"}</Arrow>
-            <Arrow onClick={() => setCount(count + 1)}>{"Down"}</Arrow>
+            <Arrow onClick={goUp}>{"Up"}</Arrow>
+            <Arrow onClick={handleRotation}>{"Rotate"}</Arrow>
+            <Arrow onClick={goDown}>{"Down"}</Arrow>
           </Column>
           <Column>
             <Arrow onClick={goRight}>{"Right"}</Arrow>
