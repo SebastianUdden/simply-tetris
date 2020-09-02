@@ -46,6 +46,7 @@ const getHighScores = () => {
 export default () => {
   const [showTab, setShowTab] = useState("menu")
   const [pause, setPause] = useState(false)
+  const [sound, setSound] = useState(true)
   const [score, setScore] = useState(0)
   const [highScores, setHighScores] = useState(getHighScores)
 
@@ -62,34 +63,6 @@ export default () => {
       <H1>
         Simply<WrapWord color="orange">Tetris</WrapWord>
       </H1>
-      {showTab === "tetris" && (
-        <>
-          <Board
-            score={score}
-            pause={pause}
-            onScoreChange={score => setScore(score)}
-            onEndGame={handleEndGame}
-          />
-          <Buttons>
-            <Button
-              id="restart"
-              onClick={() => {
-                handleEndGame()
-                setScore(0)
-                setTimeout(() => setShowTab("tetris"), 100)
-              }}
-            >
-              Restart
-            </Button>
-            <Button id="pause" onClick={() => setPause(!pause)}>
-              {pause ? "Play" : "Pause"}
-            </Button>
-            <Button id="quit" onClick={handleEndGame}>
-              Quit
-            </Button>
-          </Buttons>
-        </>
-      )}
       {showTab === "menu" && (
         <Menu
           highScores={highScores}
@@ -109,6 +82,48 @@ export default () => {
           }}
         />
       )}
+      <>
+        {showTab === "tetris" && (
+          <Board
+            score={score}
+            pause={pause}
+            sound={sound}
+            onScoreChange={score => setScore(score)}
+            onEndGame={handleEndGame}
+          />
+        )}
+        <Buttons>
+          {showTab === "tetris" && (
+            <>
+              <Button
+                id="restart"
+                onClick={() => {
+                  handleEndGame()
+                  setScore(0)
+                  setTimeout(() => setShowTab("tetris"), 100)
+                }}
+              >
+                Restart
+              </Button>
+              <Button id="pause" onClick={() => setPause(!pause)}>
+                {pause ? "Play" : "Pause"}
+              </Button>
+            </>
+          )}
+          <Button
+            id="sound"
+            onClick={() => setSound(!sound)}
+            style={{ maxWidth: "200px", margin: "5px auto" }}
+          >
+            {sound ? "Sound On" : "Sound Off"}
+          </Button>
+          {showTab === "tetris" && (
+            <Button id="quit" onClick={handleEndGame}>
+              Quit
+            </Button>
+          )}
+        </Buttons>
+      </>
     </Container>
   )
 }

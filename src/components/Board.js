@@ -100,7 +100,34 @@ const getCellSize = () => {
   return window.innerHeight / 50
 }
 
-export default ({ pause, score, onEndGame, onScoreChange }) => {
+const audio = new Audio(
+  "https://ia800504.us.archive.org/33/items/TetrisThemeMusic/Tetris.mp3"
+)
+
+const fadeIn = () => {
+  audio.play()
+  const fadeInAudio = setInterval(() => {
+    if (audio.volume < 0.95) {
+      audio.volume += 0.05
+      return
+    }
+    clearInterval(fadeInAudio)
+  }, 20)
+}
+
+const fadeOut = () => {
+  const fadeOutAudio = setInterval(() => {
+    if (audio.volume > 0.05) {
+      audio.volume -= 0.05
+      return
+    }
+    clearInterval(fadeOutAudio)
+    audio.pause()
+    audio.volume = 0.0
+  }, 20)
+}
+
+export default ({ pause, sound, score, onEndGame, onScoreChange }) => {
   const width = 12
   const height = 22
   const innerWidth = 10
@@ -207,20 +234,6 @@ export default ({ pause, score, onEndGame, onScoreChange }) => {
   const goRight = () => changeXpos(1)
   const goDown = () => setCount(count + 1)
 
-  //   const keyHandler = e => {
-  //     if (e.key === "ArrowUp") {
-  //       console.log("UP")
-  //     } else if (e.key === "ArrowRight") {
-  //       goRight()
-  //     } else if (e.key === "ArrowDown") {
-  //       console.log("DOWN")
-  //     } else if (e.key === "ArrowLeft") {
-  //       goLeft()
-  //     } else if (e.key === " ") {
-  //       handleRotation()
-  //     }
-  //   }
-
   useEffect(() => {
     setLvl(Math.floor(clearedRows / 5) + 1)
   }, [clearedRows])
@@ -276,14 +289,34 @@ export default ({ pause, score, onEndGame, onScoreChange }) => {
   }, [pause, count, speed])
 
   useEffect(() => {
+    if (sound) {
+      fadeIn()
+      return
+    }
+    fadeOut()
+  }, [sound])
+
+  useEffect(() => {
+    audio.loop = true
+    audio.volume = 0.0
+    audio.play()
+
     setCellSize(getCellSize())
-    // document.body.addEventListener("keydown", keyHandler)
     const timer = setTimeout(() => {
       setCount(0)
     }, speed)
     return () => {
       clearTimeout(timer)
-      //   document.body.removeEventListener("keydown", keyHandler)
+      const fadeOutAudio = setInterval(() => {
+        if (audio.volume > 0.05) {
+          audio.volume -= 0.05
+          return
+        }
+        clearInterval(fadeOutAudio)
+        audio.pause()
+        audio.volume = 0.0
+        audio.currentTime = 0
+      }, 200)
     }
   }, [])
 
