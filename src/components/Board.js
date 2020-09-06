@@ -100,9 +100,11 @@ const getCellSize = () => {
   return window.innerHeight / 50
 }
 
-const audio = new Audio(
-  "https://ia800504.us.archive.org/33/items/TetrisThemeMusic/Tetris.mp3"
-)
+const audio =
+  typeof window !== "undefined" &&
+  new Audio(
+    "https://ia800504.us.archive.org/33/items/TetrisThemeMusic/Tetris.mp3"
+  )
 
 const fadeIn = () => {
   audio.play()
